@@ -8,7 +8,7 @@ public class VolleyConfig {
      * 获取服务器文件列表   上传本地文件
      */
 
-    public static String FILE_URL = "http://103.40.192.190:8080/";
+    public static String FILE_URL = "http://103.40.192.190:8082/";
 
     // 测试环境的配置
     // public static String BASE_URL = "http://10.47.17.243:8080/";
