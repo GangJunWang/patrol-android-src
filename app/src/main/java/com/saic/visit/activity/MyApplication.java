@@ -20,6 +20,8 @@ public class MyApplication extends Application {
     public static String JingXiaoShang = "";
     public static String JingXiaoCode = "";
     public static List<Order> excelList = new ArrayList<>();
+    //这个集合存在的意义在于判断二次取证是否重复
+    public static List<List<String>> excelList2 = new ArrayList<>();
 
     @Override
     public void onCreate() {

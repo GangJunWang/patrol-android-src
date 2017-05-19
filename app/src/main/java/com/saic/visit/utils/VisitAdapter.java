@@ -159,6 +159,13 @@ public class VisitAdapter extends BaseAdapter {
         String s = StringUtil.ListToString(notEditItemVos11);
         flag1 = false;
 
+
+        for (int i = 0; i < MyApplication.excelList2.size(); i++) {
+            if (notEditItemVos11.get(0).equals(MyApplication.excelList2.get(i).get(0))){
+                MyApplication.excelList.get(i).receiverAddr = s;
+            }
+        }
+
         for (int i = 0; i < MyApplication.excelList.size(); i++) {
             if (s.equals(MyApplication.excelList.get(i).receiverAddr)) {
                 flag1 = true;
@@ -173,6 +180,7 @@ public class VisitAdapter extends BaseAdapter {
                 }
             }
             MyApplication.excelList.add(new Order(xuhao + "", pointCode, "照片", "否", name, s, "无"));
+            MyApplication.excelList2.add(notEditItemVos11);
             xuhao++;
         }
         /* gridViewAdapter = new GridViewAdapter(itemVos1, context);

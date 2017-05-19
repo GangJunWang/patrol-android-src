@@ -100,6 +100,7 @@ public class ShopVisitActivity extends BaseActivity {
     protected void init(Bundle savedInstanceState) {
         txtTitle.setText(getResources().getText(R.string.visit_title));
         imgRight.setImageResource(R.drawable.shop_visit_add);
+
         initData();
     }
 
@@ -108,9 +109,17 @@ public class ShopVisitActivity extends BaseActivity {
         Intent intent;
         switch (view.getId()) {
             case R.id.rela_back:
-                setResult(20);
+              /*  setResult(20);
                 finish();
-                ShopVisitActivity.this.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                ShopVisitActivity.this.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);*/
+                if (null == MyApplication.excelList || 0 == MyApplication.excelList.size()) {
+                    setResult(20);
+                    finish();
+                    ShopVisitActivity.this.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                } else {
+                    ToastUtil.show(ShopVisitActivity.this, "请先导出数据");
+                }
+
                 break;
             case R.id.txt_title:
                 break;
@@ -136,7 +145,6 @@ public class ShopVisitActivity extends BaseActivity {
                                 if (null == MyApplication.excelList || 0 == MyApplication.excelList.size()) {
                                     ToastUtil.show(ShopVisitActivity.this, "暂无数据");
                                 } else {
-
                                     report.setBackgroundResource(R.drawable.enble_button);
                                     report.setEnabled(false);
                                     loadingDialog = WeiboDialogUtils.createLoadingDialog(ShopVisitActivity.this, "正在导出.....");
@@ -168,6 +176,7 @@ public class ShopVisitActivity extends BaseActivity {
                                 MyApplication.excelList.remove(i);
                             }*/
                                             MyApplication.excelList.clear();
+                                            MyApplication.excelList2.clear();
 
                                             hand.sendEmptyMessage(0);
 
@@ -267,7 +276,7 @@ public class ShopVisitActivity extends BaseActivity {
         String data = SharePreferenceUtil.getStringValue(Constants.TASKDETAIL + taskId, ShopVisitActivity.this);
         taskListResponse = gsonss.fromJson(data, TaskDetailResponse.class);
         int type = SharePreferenceUtil.getIntValue(Constants.TYPE + taskId, ShopVisitActivity.this);
-         contactPhone = taskListResponse.dealer.getContactPhone();
+        contactPhone = taskListResponse.dealer.getContactPhone();
         if (type == 1) {
             flag = false;
         } else {
@@ -356,13 +365,13 @@ public class ShopVisitActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            if (null == MyApplication.excelList || 0 == MyApplication.excelList.size()){
+            if (null == MyApplication.excelList || 0 == MyApplication.excelList.size()) {
                 setResult(20);
                 finish();
                 ShopVisitActivity.this.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                return  false;
-            }else {
-                ToastUtil.show(ShopVisitActivity.this,"请先导出数据");
+                return false;
+            } else {
+                ToastUtil.show(ShopVisitActivity.this, "请先导出数据");
                 return true;
             }
         }
