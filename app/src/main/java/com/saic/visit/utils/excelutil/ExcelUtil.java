@@ -58,7 +58,7 @@ public class ExcelUtil {
 
             Order order = exportOrder.get(i);
             Label xuhao =   new Label(0, i + 1,order.xuhao);
-            Label orderNum = new Label(1, i + 1, order.id);
+            Label orderNum = new Label(1, i + 1, order.pointid);
             Label restaurant = new Label(2, i + 1, order.restName);
             Label istrfa = new Label(3, i + 1, order.istrfa);
             Label nameLabel = new Label(4, i + 1, order.restPhone);

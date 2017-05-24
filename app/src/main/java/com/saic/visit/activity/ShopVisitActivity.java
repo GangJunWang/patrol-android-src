@@ -34,7 +34,11 @@ import com.saic.visit.utils.NetWorkUtil;
 import com.saic.visit.utils.SharePreferenceUtil;
 import com.saic.visit.utils.ToastUtil;
 import com.saic.visit.utils.excelutil.ExcelUtil;
+import com.saic.visit.utils.excelutil.Order;
 import com.saic.visit.utils.superme.WeiboDialogUtils;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 
 import java.util.Calendar;
 import java.util.List;
@@ -119,11 +123,10 @@ public class ShopVisitActivity extends BaseActivity {
                 } else {
                     ToastUtil.show(ShopVisitActivity.this, "请先导出数据");
                 }
-
                 break;
             case R.id.txt_title:
                 break;
-            /**
+            /*
              */
             case R.id.rela_right:
                 intent = new Intent(ShopVisitActivity.this, AddVisitActivity.class);
@@ -138,7 +141,6 @@ public class ShopVisitActivity extends BaseActivity {
                 new AlertDialog.Builder(this).setTitle("确认导出吗？")
                         .setIcon(R.mipmap.app_icon)
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // 点击“确认”后的操作
@@ -152,12 +154,25 @@ public class ShopVisitActivity extends BaseActivity {
                                      * 应该先创建Exel表
                                      */
                                     new Thread() {
+
+                                        private List<Order> all;
+                                        private DbManager db;
+
                                         @Override
                                         public void run() {
                                             super.run();
                                             try {
-                                                String yyyyMMdd = new DateFormat().format("yyyyMMdd", Calendar.getInstance(Locale.CHINA)) + "";
-                                                ExcelUtil.writeExcel(ShopVisitActivity.this, MyApplication.excelList, MyApplication.JingXiaoCode + "_" + MyApplication.JingXiaoShang + "_" + yyyyMMdd);
+                                                db = MyApplication.initDbSqlite();
+                                                all = db.findAll(Order.class);
+                                                if (null != all) {
+                                                    String yyyyMMdd = new DateFormat().format("yyyyMMdd", Calendar.getInstance(Locale.CHINA)) + "";
+                                                    ExcelUtil.writeExcel(ShopVisitActivity.this, all, MyApplication.JingXiaoCode + "_" + MyApplication.JingXiaoShang + "_" + yyyyMMdd);
+                                                }else {
+                                                    String yyyyMMdd = new DateFormat().format("yyyyMMdd", Calendar.getInstance(Locale.CHINA)) + "";
+                                                    ExcelUtil.writeExcel(ShopVisitActivity.this, MyApplication.excelList, MyApplication.JingXiaoCode + "_" + MyApplication.JingXiaoShang + "_" + yyyyMMdd);
+                                                }
+
+
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
@@ -177,8 +192,12 @@ public class ShopVisitActivity extends BaseActivity {
                             }*/
                                             MyApplication.excelList.clear();
                                             MyApplication.excelList2.clear();
-
                                             hand.sendEmptyMessage(0);
+                                            try {
+                                                db.delete(Order.class);
+                                            } catch (DbException e) {
+                                                e.printStackTrace();
+                                            }
 
                                         }
                                     }.start();

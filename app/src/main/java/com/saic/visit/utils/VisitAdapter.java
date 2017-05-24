@@ -33,6 +33,8 @@ import com.saic.visit.widget.MTextViewItemQuestion;
 import com.saic.visit.widget.MTextViewItemQuestionOther;
 import com.saic.visit.widget.MyGridView;
 
+import org.xutils.DbManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +69,7 @@ public class VisitAdapter extends BaseAdapter {
     private GridViewAdapter gridViewAdapter;
     // 表格的序号
     private int xuhao = 0;
+    private DbManager db;
 
     public VisitAdapter(Context context, ModuleVo vo, List<QuestionVo> tasks, CheckClickListener listener, boolean flag) {
         this.context = context;
@@ -158,10 +161,10 @@ public class VisitAdapter extends BaseAdapter {
 
         String s = StringUtil.ListToString(notEditItemVos11);
         flag1 = false;
-
+        db = MyApplication.initDbSqlite();
 
         for (int i = 0; i < MyApplication.excelList2.size(); i++) {
-            if (notEditItemVos11.get(0).equals(MyApplication.excelList2.get(i).get(0))){
+            if (notEditItemVos11.get(0).equals(MyApplication.excelList2.get(i).get(0))) {
                 MyApplication.excelList.get(i).receiverAddr = s;
             }
         }
@@ -179,7 +182,13 @@ public class VisitAdapter extends BaseAdapter {
                     xuhao++;
                 }
             }
+
             MyApplication.excelList.add(new Order(xuhao + "", pointCode, "照片", "否", name, s, "无"));
+            try {
+                db.save(new Order(xuhao + "", pointCode, "照片", "否", name, s, "无"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             MyApplication.excelList2.add(notEditItemVos11);
             xuhao++;
         }
