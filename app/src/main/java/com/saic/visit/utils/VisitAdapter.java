@@ -34,6 +34,7 @@ import com.saic.visit.widget.MTextViewItemQuestionOther;
 import com.saic.visit.widget.MyGridView;
 
 import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -166,6 +167,15 @@ public class VisitAdapter extends BaseAdapter {
         for (int i = 0; i < MyApplication.excelList2.size(); i++) {
             if (notEditItemVos11.get(0).equals(MyApplication.excelList2.get(i).get(0))) {
                 MyApplication.excelList.get(i).receiverAddr = s;
+
+                try {
+                    List<Order> all = db.findAll(Order.class);
+                    all.get(i).receiverAddr = s;
+                    db.update(all);
+                    //    db.save(all);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

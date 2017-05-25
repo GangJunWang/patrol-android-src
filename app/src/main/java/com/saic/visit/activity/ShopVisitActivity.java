@@ -87,6 +87,7 @@ public class ShopVisitActivity extends BaseActivity {
     private List<CatalogVo> delItems, addItems, modifyItems;
     private Handler hand;
     private Dialog loadingDialog;
+    private DbManager db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,7 @@ public class ShopVisitActivity extends BaseActivity {
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_shop_visit);
         ButterKnife.bind(this);
+        db = MyApplication.initDbSqlite();
     }
 
 
@@ -113,16 +115,23 @@ public class ShopVisitActivity extends BaseActivity {
         Intent intent;
         switch (view.getId()) {
             case R.id.rela_back:
-              /*  setResult(20);
+                MyApplication.excelList.clear();
+                MyApplication.excelList2.clear();
+                try {
+                    db.delete(Order.class);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+                setResult(20);
                 finish();
-                ShopVisitActivity.this.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);*/
-                if (null == MyApplication.excelList || 0 == MyApplication.excelList.size()) {
+                ShopVisitActivity.this.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+      /*          if (null == MyApplication.excelList || 0 == MyApplication.excelList.size()) {
                     setResult(20);
                     finish();
                     ShopVisitActivity.this.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                 } else {
                     ToastUtil.show(ShopVisitActivity.this, "请先导出数据");
-                }
+                }*/
                 break;
             case R.id.txt_title:
                 break;
@@ -156,18 +165,17 @@ public class ShopVisitActivity extends BaseActivity {
                                     new Thread() {
 
                                         private List<Order> all;
-                                        private DbManager db;
+
 
                                         @Override
                                         public void run() {
                                             super.run();
                                             try {
-                                                db = MyApplication.initDbSqlite();
                                                 all = db.findAll(Order.class);
                                                 if (null != all) {
                                                     String yyyyMMdd = new DateFormat().format("yyyyMMdd", Calendar.getInstance(Locale.CHINA)) + "";
                                                     ExcelUtil.writeExcel(ShopVisitActivity.this, all, MyApplication.JingXiaoCode + "_" + MyApplication.JingXiaoShang + "_" + yyyyMMdd);
-                                                }else {
+                                                } else {
                                                     String yyyyMMdd = new DateFormat().format("yyyyMMdd", Calendar.getInstance(Locale.CHINA)) + "";
                                                     ExcelUtil.writeExcel(ShopVisitActivity.this, MyApplication.excelList, MyApplication.JingXiaoCode + "_" + MyApplication.JingXiaoShang + "_" + yyyyMMdd);
                                                 }
@@ -384,15 +392,19 @@ public class ShopVisitActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            if (null == MyApplication.excelList || 0 == MyApplication.excelList.size()) {
-                setResult(20);
-                finish();
-                ShopVisitActivity.this.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                return false;
-            } else {
-                ToastUtil.show(ShopVisitActivity.this, "请先导出数据");
-                return true;
-            }
+            MyApplication.excelList.clear();
+            MyApplication.excelList2.clear();
+
+        /*    try {
+                db.delete(Order.class);
+            } catch (DbException e) {
+                e.printStackTrace();
+            }*/
+            setResult(20);
+            finish();
+            ShopVisitActivity.this.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+            return false;
+
         }
         return super.onKeyDown(keyCode, event);
     }

@@ -47,8 +47,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.R.attr.name;
-
 /**
  *
  */
@@ -118,7 +116,6 @@ public class AddVisitActivity extends BaseActivity implements AddPhoto {
     }
 
     private void addData() {
-
         List<CheckPointVo> selectPoint;
         List<ModuleVo> firstList = taskDetailResponse.models;
         List<CatalogVo> secondList = null;
@@ -314,6 +311,7 @@ public class AddVisitActivity extends BaseActivity implements AddPhoto {
 
     /**
      * 在系统的返回键加上监听  无论有没有数据  都进行 保存操作
+     *
      * @param keyCode
      * @param event
      * @return
@@ -329,7 +327,7 @@ public class AddVisitActivity extends BaseActivity implements AddPhoto {
             finish();
             AddVisitActivity.this.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
         }
-        if (keyCode == KeyEvent.KEYCODE_HOME){
+        if (keyCode == KeyEvent.KEYCODE_HOME) {
             addData();
             saveLog();
             setResult(100);
@@ -392,7 +390,7 @@ public class AddVisitActivity extends BaseActivity implements AddPhoto {
             ToastUtil.show(AddVisitActivity.this, "不可用");
         }*/
 
-       //  图片不压缩  需要提前设置好存储路径
+        //  图片不压缩  需要提前设置好存储路径
         Intent intentPhote = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intentPhote.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
         File out = new File(getPhotopath());
@@ -405,6 +403,7 @@ public class AddVisitActivity extends BaseActivity implements AddPhoto {
 
     /**
      * 获取原图片存储路径
+     *
      * @return
      */
     private String getPhotopath() {
@@ -413,9 +412,9 @@ public class AddVisitActivity extends BaseActivity implements AddPhoto {
         // 文件夹路径
         pathUrl = MyApplication.path1;
         imageName = new DateFormat().format("yyyyMMddhhmmss", Calendar.getInstance(Locale.CHINA)) + ".jpeg";
-        imageName = TaskDetailActivity.Jingxiaoshang + "_" + TaskDetailActivity.JingCode + "_" + theFileName +"_" + imageName;
-                //File file = new File(pathUrl);
-      //  file.mkdirs();// 创建文件夹
+        imageName = TaskDetailActivity.Jingxiaoshang + "_" + TaskDetailActivity.JingCode + "_" + theFileName + "_" + imageName;
+        //File file = new File(pathUrl);
+        //  file.mkdirs();// 创建文件夹
         fileName = pathUrl + imageName;
         return fileName;
     }
@@ -423,7 +422,7 @@ public class AddVisitActivity extends BaseActivity implements AddPhoto {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 2000 && resultCode == Activity.RESULT_OK) {
+        if (requestCode == 2000 && resultCode == Activity.RESULT_OK) {
 
             /**
              * 压缩两套图 为了展示效果  先拿出乱进行压缩  在存放进另一个目录
@@ -433,20 +432,21 @@ public class AddVisitActivity extends BaseActivity implements AddPhoto {
             try {
                 path3 = MyApplication.path3;
                 File file = new File(path3);
-                if (!file.exists()){
+                if (!file.exists()) {
                     file.mkdirs();
                 }
                 b = new FileOutputStream(path3 + imageName);
-                getimage.compress(Bitmap.CompressFormat.JPEG,10, b);// 把数据写入文件
+                getimage.compress(Bitmap.CompressFormat.JPEG, 10, b);// 把数据写入文件
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
             fileName = pathUrl + imageName;
-            if (!"".equals(fileName) && null != fileName && !"".equals(name) && null != imageName)
-                mAdapter.setBoymap(path3 + imageName,imageName);
+            if (null != fileName && !"".equals(fileName) && null != imageName && !"".equals(imageName)) {
+                mAdapter.setBoymap(path3 + imageName, imageName);
+            }
         }
         mAdapter.notifyDataSetChanged();
-        }
+    }
 
     /**
      * 压缩图片的方法
@@ -456,7 +456,7 @@ public class AddVisitActivity extends BaseActivity implements AddPhoto {
         BitmapFactory.Options newOpts = new BitmapFactory.Options();
         //开始读入图片，此时把options.inJustDecodeBounds 设回true了
         newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(srcPath,newOpts);//此时返回bm为空
+        Bitmap bitmap = BitmapFactory.decodeFile(srcPath, newOpts);//此时返回bm为空
         newOpts.inJustDecodeBounds = false;
         int w = newOpts.outWidth;
         int h = newOpts.outHeight;
@@ -477,11 +477,12 @@ public class AddVisitActivity extends BaseActivity implements AddPhoto {
         bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
         return compressImage(bitmap);//压缩好比例大小后再进行质量压缩
     }
+
     private Bitmap compressImage(Bitmap image) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
         int options = 100;
-        while ( baos.toByteArray().length / 1024>100) {    //循环判断如果压缩后图片是否大于100kb,大于继续压缩
+        while (baos.toByteArray().length / 1024 > 100) {    //循环判断如果压缩后图片是否大于100kb,大于继续压缩
             baos.reset();//重置baos即清空baos
             options -= 10;//每次都减少10
             image.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
@@ -490,7 +491,7 @@ public class AddVisitActivity extends BaseActivity implements AddPhoto {
         Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片
         return bitmap;
     }
-    }
+}
 
 /*    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
