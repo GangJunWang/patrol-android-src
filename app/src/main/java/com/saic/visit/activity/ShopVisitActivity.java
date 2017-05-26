@@ -29,6 +29,7 @@ import com.saic.visit.model.LogRequest;
 import com.saic.visit.model.RequestVoRequest;
 import com.saic.visit.model.TaskDetailResponse;
 import com.saic.visit.utils.DialogUtil;
+import com.saic.visit.utils.FileHelper;
 import com.saic.visit.utils.ModelAdapter;
 import com.saic.visit.utils.NetWorkUtil;
 import com.saic.visit.utils.SharePreferenceUtil;
@@ -173,6 +174,17 @@ public class ShopVisitActivity extends BaseActivity {
                                             try {
                                                 all = db.findAll(Order.class);
                                                 if (null != all) {
+                                                    // 增加一步   将当前数据库的所有文件对象、
+                                                    StringBuffer sb = new StringBuffer();
+                                                    for (int i = 0; i < all.size(); i++) {
+                                                        String receiverAddr = all.get(i).receiverAddr;
+                                                        sb.append(receiverAddr);
+                                                    }
+                                                    String s = sb.toString();
+                                                    String jingXiaoShang = MyApplication.JingXiaoShang;
+                                                    String jingXiaoCode = MyApplication.JingXiaoCode;
+                                                    String fileName = jingXiaoShang + jingXiaoCode + "__lastresult_log.txt";
+                                                    FileHelper.writeTxtToFile(s, MyApplication.filePath, fileName);
                                                     String yyyyMMdd = new DateFormat().format("yyyyMMdd", Calendar.getInstance(Locale.CHINA)) + "";
                                                     ExcelUtil.writeExcel(ShopVisitActivity.this, all, MyApplication.JingXiaoCode + "_" + MyApplication.JingXiaoShang + "_" + yyyyMMdd);
                                                 } else {
@@ -394,12 +406,11 @@ public class ShopVisitActivity extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             MyApplication.excelList.clear();
             MyApplication.excelList2.clear();
-
-        /*    try {
+            try {
                 db.delete(Order.class);
             } catch (DbException e) {
                 e.printStackTrace();
-            }*/
+            }
             setResult(20);
             finish();
             ShopVisitActivity.this.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);

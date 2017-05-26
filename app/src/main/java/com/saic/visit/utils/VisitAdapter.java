@@ -201,6 +201,17 @@ public class VisitAdapter extends BaseAdapter {
             }
             MyApplication.excelList2.add(notEditItemVos11);
             xuhao++;
+            // 增加一步   将当前数据库的所有文件对象、
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < MyApplication.excelList.size(); i++) {
+                String receiverAddr = MyApplication.excelList.get(i).receiverAddr;
+                sb.append(receiverAddr);
+            }
+            String ss = sb.toString();
+            String jingXiaoShang = MyApplication.JingXiaoShang;
+            String jingXiaoCode = MyApplication.JingXiaoCode;
+            String fileName = jingXiaoShang + jingXiaoCode + "__Eachoperation_log.txt";
+            FileHelper.writeTxtToFile(ss, MyApplication.filePath, fileName);
         }
         /* gridViewAdapter = new GridViewAdapter(itemVos1, context);
            viewHolder.gview.setAdapter(gridViewAdapter);

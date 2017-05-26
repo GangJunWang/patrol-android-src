@@ -25,6 +25,7 @@ public class MyApplication extends Application {
     public static String path3 = "/sdcard/凯迪拉克缩略图/";
     public static String JingXiaoShang = "";
     public static String JingXiaoCode = "";
+    public  static String filePath = "/sdcard/Cadillac/";
 
     public static List<Order> excelList = new ArrayList<>();
 
